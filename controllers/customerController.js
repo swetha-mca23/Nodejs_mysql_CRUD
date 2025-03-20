@@ -7,7 +7,7 @@ const executeQuery = async (query, params = []) => {
     return result;
 };
 
-exports.getAllCustomers = async (req, res) => {
+const getAllCustomers = async (req, res) => {
     try {
         const customers = await executeQuery("SELECT * FROM customers");
         res.json(customers);
@@ -16,7 +16,7 @@ exports.getAllCustomers = async (req, res) => {
     }
 };
 
-exports.getCustomerById = async (req, res) => {
+const getCustomerById = async (req, res) => {
     try {
         const customer = await executeQuery("SELECT * FROM customers WHERE id = ?", [req.params.id]);
         res.json(customer[0] || { message: "Customer not found" });
@@ -25,7 +25,7 @@ exports.getCustomerById = async (req, res) => {
     }
 };
 
-exports.createCustomer = async (req, res) => {
+const createCustomer = async (req, res) => {
     try {
         const { name, address } = req.body;
         if (!name || !address) return res.status(400).json({ error: "Name and address required" });
@@ -37,7 +37,7 @@ exports.createCustomer = async (req, res) => {
     }
 };
 
-exports.updateCustomer = async (req, res) => {
+const updateCustomer = async (req, res) => {
     try {
         const { name, address } = req.body;
         if (!name || !address) return res.status(400).json({ error: "Name and address required" });
@@ -49,11 +49,19 @@ exports.updateCustomer = async (req, res) => {
     }
 };
 
-exports.deleteCustomer = async (req, res) => {
+const deleteCustomer = async (req, res) => {
     try {
         await executeQuery("DELETE FROM customers WHERE id = ?", [req.params.id]);
         res.json({ message: "Customer deleted" });
     } catch {
         res.status(500).json({ error: "Database error" });
     }
+};
+
+module.exports = {
+    getAllCustomers,
+    getCustomerById,
+    createCustomer,
+    updateCustomer,
+    deleteCustomer
 };
